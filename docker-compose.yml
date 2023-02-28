@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  jar:
+    image: openjdk:11
+    container_name: bakalarska-prace
+    volumes:
+      - "./bakalarska-prace_kotlin-back-end-0.0.1-SNAPSHOT.jar:/app.jar"
+      - "./application-local.properties:/application-local.properties"
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - JDBC_DATABASE_USERNAME=compose-postgres
+      - JDBC_DATABASE_PASSWORD=compose-postgres
+    entrypoint: [ "sh", "-c", "java -jar -Dspring.profiles.active=local -Dspring.jpa.hibernate.ddl-auto=update /app.jar" ]
+    ports:
+      - "8080:8080"
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
